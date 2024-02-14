@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-search.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        #map {
+            width: 1275px;
+            height: 817px;
+        }
+.leaflet-popup-content > table img {
+    width: 300px;
+   }
+ .leaflet-popup-content > img { /*for other leaflet maps you can add rule as well*/
+    width: 300px;
+   }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="js/leaflet-search.js"></script>
+        <script src="data/AllReligiousInstitutions_1.js"></script>
+        <script src="data/ElectoralDistricts_2.js"></script>
+        <script src="data/Churches_3.js"></script>
+        <script src="data/Temples_4.js"></script>
+        <script src="data/Mosques_5.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[9.981204346684502,-61.8232956240468],[10.44691272441927,-61.084160427831414]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_GoogleSatellite_0');
+        map.getPane('pane_GoogleSatellite_0').style.zIndex = 400;
+        var layer_GoogleSatellite_0 = L.tileLayer('https://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatellite_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
+        });
+        layer_GoogleSatellite_0;
+        map.addLayer(layer_GoogleSatellite_0);
+        function pop_AllReligiousInstitutions_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Y Coordinate'] !== null ? autolinker.link(feature.properties['Y Coordinate'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['X Coordinate'] !== null ? autolinker.link(feature.properties['X Coordinate'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Name of Institution'] !== null ? autolinker.link(feature.properties['Name of Institution'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Religious Denomination'] !== null ? autolinker.link(feature.properties['Religious Denomination'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Date Established'] !== null ? autolinker.link(feature.properties['Date Established'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Significant Features'] !== null ? autolinker.link(feature.properties['Significant Features'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Other'] !== null ? autolinker.link(feature.properties['Other'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Electoral Disrict'] !== null ? autolinker.link(feature.properties['Electoral Disrict'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_AllReligiousInstitutions_1_0() {
+            return {
+                pane: 'pane_AllReligiousInstitutions_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(225,89,137,1.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_AllReligiousInstitutions_1');
+        map.getPane('pane_AllReligiousInstitutions_1').style.zIndex = 401;
+        map.getPane('pane_AllReligiousInstitutions_1').style['mix-blend-mode'] = 'normal';
+        var layer_AllReligiousInstitutions_1 = new L.geoJson(json_AllReligiousInstitutions_1, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_AllReligiousInstitutions_1',
+            layerName: 'layer_AllReligiousInstitutions_1',
+            pane: 'pane_AllReligiousInstitutions_1',
+            onEachFeature: pop_AllReligiousInstitutions_1,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_AllReligiousInstitutions_1_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_AllReligiousInstitutions_1);
+        map.addLayer(layer_AllReligiousInstitutions_1);
+        function pop_ElectoralDistricts_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"><strong>OBJECTID</strong><br />' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>ED_2017</strong><br />' + (feature.properties['ED_2017'] !== null ? autolinker.link(feature.properties['ED_2017'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>CORPORATIO</strong><br />' + (feature.properties['CORPORATIO'] !== null ? autolinker.link(feature.properties['CORPORATIO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Area_km</strong><br />' + (feature.properties['Area_km'] !== null ? autolinker.link(feature.properties['Area_km'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Shape__Are</strong><br />' + (feature.properties['Shape__Are'] !== null ? autolinker.link(feature.properties['Shape__Are'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Shape__Len</strong><br />' + (feature.properties['Shape__Len'] !== null ? autolinker.link(feature.properties['Shape__Len'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Shape_Leng</strong><br />' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Shape_Area</strong><br />' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>AREA</strong><br />' + (feature.properties['AREA'] !== null ? autolinker.link(feature.properties['AREA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>PERIMETER</strong><br />' + (feature.properties['PERIMETER'] !== null ? autolinker.link(feature.properties['PERIMETER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>REGIONS_</strong><br />' + (feature.properties['REGIONS_'] !== null ? autolinker.link(feature.properties['REGIONS_'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>REGIONS_ID</strong><br />' + (feature.properties['REGIONS_ID'] !== null ? autolinker.link(feature.properties['REGIONS_ID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>NAMES</strong><br />' + (feature.properties['NAMES'] !== null ? autolinker.link(feature.properties['NAMES'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Councillor</strong><br />' + (feature.properties['Councillor'] !== null ? autolinker.link(feature.properties['Councillor'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_ElectoralDistricts_2_0(feature) {
+            switch(String(feature.properties['ED_2017'])) {
+                case 'BARRACKPORE WEST':
+                    return {
+                pane: 'pane_ElectoralDistricts_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(41,208,105,0.4)',
+                interactive: true,
+            }
+                    break;
+                case 'BRONTE':
+                    return {
+                pane: 'pane_ElectoralDistricts_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(201,133,114,0.4)',
+                interactive: true,
+            }
+                    break;
+                case 'DEBE EAST/L\'ESPERANCE/UNION HALL':
+                    return {
+                pane: 'pane_ElectoralDistricts_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(210,36,94,0.4)',
+                interactive: true,
+            }
+                    break;
+                case 'DEBE SOUTH':
+                    return {
+                pane: 'pane_ElectoralDistricts_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(214,39,197,0.4)',
+                interactive: true,
+            }
+                    break;
+                case 'LA FORTUNE/DEBE NORTH':
+                    return {
+                pane: 'pane_ElectoralDistricts_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(130,184,231,0.4)',
+                interactive: true,
+            }
+                    break;
+                case 'LA ROMAINE':
+                    return {
+                pane: 'pane_ElectoralDistricts_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(64,232,35,0.4)',
+                interactive: true,
+            }
+                    break;
+                case 'PALMISTE/HERMITAGE':
+                    return {
+                pane: 'pane_ElectoralDistricts_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(15,222,208,0.4)',
+                interactive: true,
+            }
+                    break;
+                case 'PENAL':
+                    return {
+                pane: 'pane_ElectoralDistricts_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(221,194,114,0.4)',
+                interactive: true,
+            }
+                    break;
+                case 'QUINAM/ MORNE DIABLO':
+                    return {
+                pane: 'pane_ElectoralDistricts_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(170,100,223,0.4)',
+                interactive: true,
+            }
+                    break;
+                case 'ROCHARD/BARRACKPORE EAST':
+                    return {
+                pane: 'pane_ElectoralDistricts_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.4)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(29,25,224,0.4)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_ElectoralDistricts_2');
+        map.getPane('pane_ElectoralDistricts_2').style.zIndex = 402;
+        map.getPane('pane_ElectoralDistricts_2').style['mix-blend-mode'] = 'normal';
+        var layer_ElectoralDistricts_2 = new L.geoJson(json_ElectoralDistricts_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_ElectoralDistricts_2',
+            layerName: 'layer_ElectoralDistricts_2',
+            pane: 'pane_ElectoralDistricts_2',
+            onEachFeature: pop_ElectoralDistricts_2,
+            style: style_ElectoralDistricts_2_0,
+        });
+        bounds_group.addLayer(layer_ElectoralDistricts_2);
+        map.addLayer(layer_ElectoralDistricts_2);
+        function pop_Churches_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"><strong>fid</strong><br />' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Y Coordinate</strong><br />' + (feature.properties['Y Coordinate'] !== null ? autolinker.link(feature.properties['Y Coordinate'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>X Coordinate</strong><br />' + (feature.properties['X Coordinate'] !== null ? autolinker.link(feature.properties['X Coordinate'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Name of Institution</strong><br />' + (feature.properties['Name of Institution'] !== null ? autolinker.link(feature.properties['Name of Institution'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Address</strong><br />' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Religious Denomination</strong><br />' + (feature.properties['Religious Denomination'] !== null ? autolinker.link(feature.properties['Religious Denomination'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Date Established</strong><br />' + (feature.properties['Date Established'] !== null ? autolinker.link(feature.properties['Date Established'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Significant Features</strong><br />' + (feature.properties['Significant Features'] !== null ? autolinker.link(feature.properties['Significant Features'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Other</strong><br />' + (feature.properties['Other'] !== null ? autolinker.link(feature.properties['Other'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Electoral Disrict</strong><br />' + (feature.properties['Electoral Disrict'] !== null ? autolinker.link(feature.properties['Electoral Disrict'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Attachment</strong><br />' + (feature.properties['Attachment'] !== null ? '<img src="images/' + String(feature.properties['Attachment']).replace(/[\\\/:]/g, '_').trim() + '">' : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Churches_3_0() {
+            return {
+                pane: 'pane_Churches_3',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Churches_3.svg',
+            iconSize: [22.799999999999997, 22.799999999999997]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Churches_3');
+        map.getPane('pane_Churches_3').style.zIndex = 403;
+        map.getPane('pane_Churches_3').style['mix-blend-mode'] = 'normal';
+        var layer_Churches_3 = new L.geoJson(json_Churches_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Churches_3',
+            layerName: 'layer_Churches_3',
+            pane: 'pane_Churches_3',
+            onEachFeature: pop_Churches_3,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_Churches_3_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Churches_3);
+        map.addLayer(layer_Churches_3);
+        function pop_Temples_4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"><strong>fid</strong><br />' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Y Coordinate</strong><br />' + (feature.properties['Y Coordinate'] !== null ? autolinker.link(feature.properties['Y Coordinate'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>X Coordinate</strong><br />' + (feature.properties['X Coordinate'] !== null ? autolinker.link(feature.properties['X Coordinate'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Name of Institution</strong><br />' + (feature.properties['Name of Institution'] !== null ? autolinker.link(feature.properties['Name of Institution'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Address</strong><br />' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Religious Denomination</strong><br />' + (feature.properties['Religious Denomination'] !== null ? autolinker.link(feature.properties['Religious Denomination'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Date Established</strong><br />' + (feature.properties['Date Established'] !== null ? autolinker.link(feature.properties['Date Established'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Significant Features</strong><br />' + (feature.properties['Significant Features'] !== null ? autolinker.link(feature.properties['Significant Features'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Other</strong><br />' + (feature.properties['Other'] !== null ? autolinker.link(feature.properties['Other'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Electoral Disrict</strong><br />' + (feature.properties['Electoral Disrict'] !== null ? autolinker.link(feature.properties['Electoral Disrict'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Attachment</strong><br />' + (feature.properties['Attachment'] !== null ? '<img src="images/' + String(feature.properties['Attachment']).replace(/[\\\/:]/g, '_').trim() + '">' : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Temples_4_0() {
+            return {
+                pane: 'pane_Temples_4',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Temples_4.svg',
+            iconSize: [22.799999999999997, 22.799999999999997]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Temples_4');
+        map.getPane('pane_Temples_4').style.zIndex = 404;
+        map.getPane('pane_Temples_4').style['mix-blend-mode'] = 'normal';
+        var layer_Temples_4 = new L.geoJson(json_Temples_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Temples_4',
+            layerName: 'layer_Temples_4',
+            pane: 'pane_Temples_4',
+            onEachFeature: pop_Temples_4,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_Temples_4_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Temples_4);
+        map.addLayer(layer_Temples_4);
+        function pop_Mosques_5(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"><strong>fid</strong><br />' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Y Coordinate</strong><br />' + (feature.properties['Y Coordinate'] !== null ? autolinker.link(feature.properties['Y Coordinate'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>X Coordinate</strong><br />' + (feature.properties['X Coordinate'] !== null ? autolinker.link(feature.properties['X Coordinate'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Name of Institution</strong><br />' + (feature.properties['Name of Institution'] !== null ? autolinker.link(feature.properties['Name of Institution'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Address</strong><br />' + (feature.properties['Address'] !== null ? autolinker.link(feature.properties['Address'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Religious Denomination</strong><br />' + (feature.properties['Religious Denomination'] !== null ? autolinker.link(feature.properties['Religious Denomination'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Date Established</strong><br />' + (feature.properties['Date Established'] !== null ? autolinker.link(feature.properties['Date Established'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Significant Features</strong><br />' + (feature.properties['Significant Features'] !== null ? autolinker.link(feature.properties['Significant Features'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Other</strong><br />' + (feature.properties['Other'] !== null ? autolinker.link(feature.properties['Other'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Electoral Disrict</strong><br />' + (feature.properties['Electoral Disrict'] !== null ? autolinker.link(feature.properties['Electoral Disrict'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Attachment</strong><br />' + (feature.properties['Attachment'] !== null ? '<img src="images/' + String(feature.properties['Attachment']).replace(/[\\\/:]/g, '_').trim() + '">' : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Mosques_5_0() {
+            return {
+                pane: 'pane_Mosques_5',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/Mosques_5.svg',
+            iconSize: [22.799999999999997, 22.799999999999997]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Mosques_5');
+        map.getPane('pane_Mosques_5').style.zIndex = 405;
+        map.getPane('pane_Mosques_5').style['mix-blend-mode'] = 'normal';
+        var layer_Mosques_5 = new L.geoJson(json_Mosques_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Mosques_5',
+            layerName: 'layer_Mosques_5',
+            pane: 'pane_Mosques_5',
+            onEachFeature: pop_Mosques_5,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_Mosques_5_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Mosques_5);
+        map.addLayer(layer_Mosques_5);
+            var abstract = new L.Control({'position':'topright'});
+            abstract.onAdd = function (map) {
+                this._div = L.DomUtil.create('div',
+                'leaflet-control abstract');
+                this._div.id = 'abstract'
+
+                    abstract.show();
+                    return this._div;
+                };
+                abstract.show = function () {
+                    this._div.classList.remove("abstract");
+                    this._div.classList.add("abstractUncollapsed");
+                    this._div.innerHTML = 'Title: Religious Institutions Within the PDRC<br /><br />Produced by the Office of the Chairman, Gowtam Maharaj, Penal/Debe Regional Corporation<br /><br />Cartographer: Ritesh Babooram<br /><br />Date: 3-February-2024';
+            };
+            abstract.addTo(map);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/Mosques_5.png" /> Mosques': layer_Mosques_5,'<img src="legend/Temples_4.png" /> Temples': layer_Temples_4,'<img src="legend/Churches_3.png" /> Churches': layer_Churches_3,'Electoral Districts<br /><table><tr><td style="text-align: center;"><img src="legend/ElectoralDistricts_2_BARRACKPOREWEST0.png" /></td><td>BARRACKPORE WEST</td></tr><tr><td style="text-align: center;"><img src="legend/ElectoralDistricts_2_BRONTE1.png" /></td><td>BRONTE</td></tr><tr><td style="text-align: center;"><img src="legend/ElectoralDistricts_2_DEBEEASTLESPERANCEUNIONHALL2.png" /></td><td>DEBE EAST/L\'ESPERANCE/UNION HALL</td></tr><tr><td style="text-align: center;"><img src="legend/ElectoralDistricts_2_DEBESOUTH3.png" /></td><td>DEBE SOUTH</td></tr><tr><td style="text-align: center;"><img src="legend/ElectoralDistricts_2_LAFORTUNEDEBENORTH4.png" /></td><td>LA FORTUNE/DEBE NORTH</td></tr><tr><td style="text-align: center;"><img src="legend/ElectoralDistricts_2_LAROMAINE5.png" /></td><td>LA ROMAINE</td></tr><tr><td style="text-align: center;"><img src="legend/ElectoralDistricts_2_PALMISTEHERMITAGE6.png" /></td><td>PALMISTE/HERMITAGE</td></tr><tr><td style="text-align: center;"><img src="legend/ElectoralDistricts_2_PENAL7.png" /></td><td>PENAL</td></tr><tr><td style="text-align: center;"><img src="legend/ElectoralDistricts_2_QUINAMMORNEDIABLO8.png" /></td><td>QUINAM/ MORNE DIABLO</td></tr><tr><td style="text-align: center;"><img src="legend/ElectoralDistricts_2_ROCHARDBARRACKPOREEAST9.png" /></td><td>ROCHARD/BARRACKPORE EAST</td></tr></table>': layer_ElectoralDistricts_2,'<img src="legend/AllReligiousInstitutions_1.png" /> All Religious Institutions': layer_AllReligiousInstitutions_1,"Google Satellite": layer_GoogleSatellite_0,},{collapsed:false}).addTo(map);
+        setBounds();
+        var i = 0;
+        layer_ElectoralDistricts_2.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['ED_2017'] !== null?String('<div style="color: #1f78b4; font-size: 16pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['ED_2017']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_ElectoralDistricts_2'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Churches_3.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Name of Institution'] !== null?String('<div style="color: #ffffff; font-size: 12pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Name of Institution']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Churches_3'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Temples_4.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Name of Institution'] !== null?String('<div style="color: #e31a1c; font-size: 12pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Name of Institution']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Temples_4'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Mosques_5.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Name of Institution'] !== null?String('<div style="color: #33a02c; font-size: 12pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Name of Institution']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Mosques_5'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        map.addControl(new L.Control.Search({
+            layer: layer_AllReligiousInstitutions_1,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'Name of Institution'}));
+        document.getElementsByClassName('search-button')[0].className +=
+         ' fa fa-binoculars';
+        resetLabels([layer_ElectoralDistricts_2,layer_Churches_3,layer_Temples_4,layer_Mosques_5]);
+        map.on("zoomend", function(){
+            resetLabels([layer_ElectoralDistricts_2,layer_Churches_3,layer_Temples_4,layer_Mosques_5]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_ElectoralDistricts_2,layer_Churches_3,layer_Temples_4,layer_Mosques_5]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_ElectoralDistricts_2,layer_Churches_3,layer_Temples_4,layer_Mosques_5]);
+        });
+        </script>
+    </body>
+</html>
